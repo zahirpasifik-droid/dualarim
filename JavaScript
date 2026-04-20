@@ -1,0 +1,22 @@
+function guncelle() {
+    const saat = new Date().getHours();
+    const baslik = document.getElementById("dua-baslik");
+    const arapca = document.getElementById("dua-arapca");
+    const turkce = document.getElementById("dua-turkce");
+
+    if (saat >= 5 && saat < 11) {
+        baslik.innerText = "Sabah Duası";
+        arapca.innerText = "اللَّهُمَّ بِكَ أَصْبَحْنَا";
+        turkce.innerText = "Allah'ım seninle sabahladık...";
+    } else {
+        baslik.innerText = "Günlük Hatırlatma";
+        arapca.innerText = "بِسْمِ اللّٰهِ";
+        turkce.innerText = "Besmele ile başla...";
+    }
+}
+
+function konumDuasi() {
+    alert("Evden çıkarken: Bismillahi tevekkeltü alallah.");
+}
+
+guncelle();
