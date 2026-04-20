@@ -1,44 +1,65 @@
-// Sayfa açılır açılmaz izin iste
-window.onload = function() {
-    if ("Notification" in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                console.log("Bildirim izni alındı.");
-            }
-        });
+// Bildirim İzni İste
+if ("Notification" in window) {
+    Notification.requestPermission();
+}
+
+const dualar = {
+    uyanma: {
+        baslik: "Uyanma Duası",
+        arapca: "الحَمْدُ لِلهِ الّذي أحْيانا بَعْدَ ما أماتَنا وَإليه النّشور. لا إلهَ إلاّ اللهُ وَحْدَهُ لا شَريكَ له، لهُ المُلكُ ولهُ الحَمد، وهوَ على كلّ شيءِ قدير.",
+        turkce: "Bizi öldürdükten sonra dirilten Allah'a hamd olsun. Dönüş O'nadır. Allah'tan başka ilah yoktur, O tektir..."
+    },
+    evdenCikis: {
+        baslik: "Evden Çıkış Duası",
+        arapca: "بسم اللّٰه توكلت على اللّٰه ولا حول ولا قوة إلا بالله. اللَّهُمَّ إني أعوذ بك من أن أَزل أو أُزل او أَضل او أُضل.",
+        turkce: "Allah'ın adıyla, Allah'a tevekkül ettim. Güç ve kuvvet sadece Allah'ındır. Allah'ım, sapmaktan ve saptırılmaktan sana sığınırım."
+    },
+    varsayilan: {
+        baslik: "Dualarımız Unutmayalım",
+        arapca: "لا إلهَ إلاّ اللهُ مُحَمَّدٌ رَسُولُ اللهِ",
+        turkce: "Kelime-i Tevhid ile kalbinizi ferahlatın."
     }
 };
 
-function dualariGuncelle() {
+function ekraniGuncelle() {
     const simdi = new Date();
     const saat = simdi.getHours();
     const dakika = simdi.getMinutes();
 
-    const baslik = document.getElementById("dua-baslik");
-    const arapca = document.getElementById("dua-arapca");
+    const baslikElement = document.getElementById("dua-baslik");
+    const arapcaElement = document.getElementById("dua-arapca");
+    const turkceElement = document.getElementById("dua-turkce");
 
-    // 06:40 Uyanma Duası
-    if (saat === 6 && dakika === 40) {
-        baslik.innerText = "Uyanma Duası";
-        arapca.innerText = "الحَمْدُ لِلهِ الّذي أحْيانا بَعْدَ ما أماتَنا وَإليه النّشور...";
-        bildirimGonder("Uyanma vakti: Dualarını unutma!");
+    // 06:40 kontrolü
+    if (saat === 6 && dakika >= 40 && dakika < 59) {
+        baslikElement.innerText = dualar.uyanma.baslik;
+        arapcaElement.innerText = dualar.uyanma.arapca;
+        turkceElement.innerText = dualar.uyanma.turkce;
+        if (dakika === 40) bildirimGonder(dualar.uyanma.baslik);
     } 
-    // 07:00 Evden Çıkış Duası
-    else if (saat === 7 && dakika === 0) {
-        baslik.innerText = "Evden Çıkış Duası";
-        arapca.innerText = "بسم اللّٰه توكلت على اللّٰه...";
-        bildirimGonder("Evden çıkış vakti: Allah'a emanet ol.");
+    // 07:00 kontrolü
+    else if (saat === 7 && dakika >= 0 && dakika < 30) {
+        baslikElement.innerText = dualar.evdenCikis.baslik;
+        arapcaElement.innerText = dualar.evdenCikis.arapca;
+        turkceElement.innerText = dualar.evdenCikis.turkce;
+        if (dakika === 0) bildirimGonder(dualar.evdenCikis.baslik);
+    } 
+    else {
+        baslikElement.innerText = dualar.varsayilan.baslik;
+        arapcaElement.innerText = dualar.varsayilan.arapca;
+        turkceElement.innerText = dualar.varsayilan.turkce;
     }
 }
 
-function bildirimGonder(mesaj) {
+function bildirimGonder(baslik) {
     if (Notification.permission === "granted") {
-        new Notification("Dualarımız Unutmayalım", {
-            body: mesaj,
+        new Notification(baslik, {
+            body: "Dua vaktiniz geldi, okumak için dokunun.",
             icon: "https://via.placeholder.com/128"
         });
     }
 }
 
-setInterval(dualariGuncelle, 30000); // 30 saniyede bir kontrol et
-dualariGuncelle();
+// Her 30 saniyede bir ekranı ve saati kontrol et
+setInterval(ekraniGuncelle, 30000);
+ekraniGuncelle();
