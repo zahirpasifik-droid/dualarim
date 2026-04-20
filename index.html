@@ -4,17 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dualarımız Unutmayalım</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0;
+        }
+        .container { 
+            background: white; width: 90%; max-width: 450px;
+            padding: 30px; border-radius: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center;
+        }
+        h1 { font-size: 24px; color: #3498db; margin-bottom: 10px; }
+        #dua-baslik { color: #2c3e50; font-size: 20px; font-weight: bold; }
+        #dua-arapca { 
+            font-size: 26px; line-height: 1.8; color: #16a085;
+            margin: 20px 0; direction: rtl; font-weight: bold;
+        }
+        #dua-turkce { font-size: 16px; color: #7f8c8d; line-height: 1.5; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
+        .footer-note { font-size: 12px; color: #bdc3c7; margin-top: 20px; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 id="dua-baslik">Hayırlı Günler</h1>
-        <div id="dua-alani">
-            <p id="dua-arapca" dir="rtl">Yükleniyor...</p>
-            <hr>
-            <p id="dua-turkce">Lütfen bekleyin...</p>
-        </div>
+
+<div class="container">
+    <h1>Dualarımız Unutmayalım</h1>
+    <hr>
+    <div id="dua-alani">
+        <div id="dua-baslik">Güncel Dua Yükleniyor...</div>
+        <div id="dua-arapca"></div>
+        <div id="dua-turkce"></div>
     </div>
-    <script src="app.js"></script>
+    <p class="footer-note">Saat 06:40 ve 07:00'de otomatik güncellenir.</p>
+</div>
+
+<script>
+const dualar = {
+    uyanma: {
+        baslik: "Uyanma Duası (06:40)",
+        arapca: "الحَمْدُ لِلهِ الّذي أحْيانا بَعْدَ ما أماتَنا وَإليه النّشور. لا إلهَ إلاّ اللهُ وَحْدَهُ لا شَريكَ له، لهُ المُلكُ ولهُ الحَمد، وهوَ على كلّ شيءِ قدير.",
+        turkce: "Bizi öldürdükten sonra dirilten Allah'a hamd olsun. Dönüş O'nadır. Allah'tan başka ilah yoktur, O tektir..."
+    },
+    evdenCikis: {
+        baslik: "Evden Çıkış Duası (07:00)",
+        arapca: "بسم اللّٰه توكلت على اللّٰه ولا حول ولا قوة إلا بالله. اللَّهُمَّ إني أعوذ بك من أن أَzel veya أَdel.",
+        turkce: "Allah'ın adıyla, Allah'a tevekkül ettim. Güç ve kuvvet sadece Allah'ındır."
+    },
+    varsayilan: {
+        baslik: "Zikir Vakti",
+        arapca: "لا إلهَ إلاّ اللهُ مُحَمَّدٌ رَسُولُ اللهِ",
+        turkce: "Kelime-i Tevhid ile güne huzurlu devam edin."
+    }
+};
+
+function guncelle() {
+    const simdi = new Date();
+    const saat = simdi.getHours();
+    const dakika = simdi.getMinutes();
+    
+    let secilenDua = dualar.varsayilan;
+
+    // Saat 06:40 kontrolü
+    if (saat === 6 && dakika >= 40) {
+        secilenDua = dualar.uyanma;
+    } 
+    // Saat 07:00 kontrolü
+    else if (saat === 7) {
+        secilenDua = dualar.evdenCikis;
+    }
+
+    document.getElementById("dua-baslik").innerText = secilenDua.baslik;
+    document.getElementById("dua-arapca").innerText = secilenDua.arapca;
+    document.getElementById("dua-turkce").innerText = secilenDua.turkce;
+}
+
+// Sayfa açıldığında ve her dakikada bir çalıştır
+guncelle();
+setInterval(guncelle, 60000);
+</script>
+
 </body>
 </html>
