@@ -1,22 +1,41 @@
-function guncelle() {
-    const saat = new Date().getHours();
+function dualariGuncelle() {
+    const simdi = new Date();
+    const saat = simdi.getHours();
+    const dakika = simdi.getMinutes();
+    const toplamDakika = (saat * 60) + dakika;
+
     const baslik = document.getElementById("dua-baslik");
     const arapca = document.getElementById("dua-arapca");
     const turkce = document.getElementById("dua-turkce");
 
-    if (saat >= 5 && saat < 11) {
-        baslik.innerText = "Sabah Duası";
-        arapca.innerText = "اللَّهُمَّ بِكَ أَصْبَحْنَا";
-        turkce.innerText = "Allah'ım seninle sabahladık...";
-    } else {
-        baslik.innerText = "Günlük Hatırlatma";
-        arapca.innerText = "بِسْمِ اللّٰهِ";
-        turkce.innerText = "Besmele ile başla...";
+    // 06:40 uyanma duası (400. dakika)
+    if (toplamDakika >= 400 && toplamDakika < 420) {
+        baslik.innerText = "Uyanma Duası";
+        arapca.innerText = "الحَمْدُ لِلهِ الّذي أحْيانا بَعْدَ ما أماتَna وَإليه النّشور... (ve devamı)";
+        turkce.innerText = "Bizi öldürdükten sonra dirilten Allah'a hamd olsun...";
+    } 
+    // 07:00 evden çıkış duası (420. dakika)
+    else if (toplamDakika >= 420 && toplamDakika < 480) {
+        baslik.innerText = "Evden Çıkış Duası";
+        arapca.innerText = "بسم اللّٰه توكلت على اللّٰه ولا حول ولا قوة إلا بالله";
+        turkce.innerText = "Allah'ın adıyla, Allah'a tevekkül ettim...";
+    }
+    else {
+        baslik.innerText = "Hayırlı Günler";
+        arapca.innerText = "لا إلهَ إلاّ اللهُ";
+        turkce.innerText = "Zikirle kalbinizi ferahlatın...";
     }
 }
 
-function konumDuasi() {
-    alert("Evden çıkarken: Bismillahi tevekkeltü alallah.");
-}
+// Her dakika kontrol et
+setInterval(dualariGuncelle, 60000);
+dualariGuncelle();
 
-guncelle();
+// Bildirim İzni ve Gönderimi (Tarayıcı destekliyorsa)
+function bildirimGonder(mesaj) {
+    if (Notification.permission === "granted") {
+        new Notification("Dualarımız Unutmayalım", { body: mesaj });
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission();
+    }
+}
